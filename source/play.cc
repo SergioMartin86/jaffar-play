@@ -203,7 +203,8 @@ int main(int argc, char *argv[])
       printw("[Jaffar]  + Cumulative IGT: %2lu:%02lu.%03lu\n", showSDLPop.getElapsedMins(), showSDLPop.getElapsedSecs(), showSDLPop.getElapsedMilisecs());
       printw("[Jaffar]  + Move: %s\n", moveList[currentStep - 1].c_str());
 
-      printw("[Jaffar]  + [Kid]   Room: %d, Pos.x: %3d, Pos.y: %3d, Fall.x: %d, Fall.y: %d, Frame: %3d, HP: %d/%d, Direction: %d\n",
+      int kidSeqIdx = showSDLPop.getKidSequenceId();
+      printw("[Jaffar]  + [Kid]   Room: %d, Pos.x: %3d, Pos.y: %3d, Fall.x: %d, Fall.y: %d, Frame: %3d, HP: %d/%d, Dir: %d, SeqId: %d (%s)\n",
              int(showSDLPop.Kid->room),
              int(showSDLPop.Kid->x),
              int(showSDLPop.Kid->y),
@@ -212,9 +213,11 @@ int main(int argc, char *argv[])
              int(showSDLPop.Kid->frame),
              int(*showSDLPop.hitp_curr),
              int(*showSDLPop.hitp_max),
-             int(showSDLPop.Kid->direction));
+             int(showSDLPop.Kid->direction),
+             kidSeqIdx, seqNames[kidSeqIdx]);
 
-      printw("[Jaffar]  + [Guard] Room: %d, Pos.x: %3d, Pos.y: %3d, Fall.x: %d, Fall.y: %d, Frame: %3d, HP: %d/%d, Direction: %d\n",
+      int guardSeqIdx = showSDLPop.getGuardSequenceId();
+      printw("[Jaffar]  + [Guard] Room: %d, Pos.x: %3d, Pos.y: %3d, Fall.x: %d, Fall.y: %d, Frame: %3d, HP: %d/%d, Dir: %d, SeqId: %d (%s)\n",
              int(showSDLPop.Guard->room),
              int(showSDLPop.Guard->x),
              int(showSDLPop.Guard->y),
@@ -223,7 +226,8 @@ int main(int argc, char *argv[])
              int(showSDLPop.Guard->frame),
              int(*showSDLPop.guardhp_curr),
              int(*showSDLPop.guardhp_max),
-             int(showSDLPop.Guard->direction));
+             int(showSDLPop.Guard->direction),
+             guardSeqIdx, seqNames[guardSeqIdx]);
 
       // Level-Specific Settings
       if (*showSDLPop.current_level == 9) printw("[Jaffar]  + Rightmost Door: %d\n", showSDLPop.level->bg[349]);

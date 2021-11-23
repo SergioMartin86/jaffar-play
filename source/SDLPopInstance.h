@@ -4,6 +4,10 @@
 #include "types.h"
 #include <string>
 
+
+extern const char* seqNames[];
+extern const word seqOffsets[];
+
 // Function types
 typedef void (*restore_room_after_quick_load_t)(void);
 typedef void (*load_global_options_t)(void);
@@ -140,6 +144,9 @@ class SDLPopInstance
   size_t getElapsedMins();
   size_t getElapsedSecs();
   size_t getElapsedMilisecs();
+
+  int getKidSequenceId();
+  int getGuardSequenceId();
 
   // SDLPop Functions
   restore_room_after_quick_load_t restore_room_after_quick_load;
