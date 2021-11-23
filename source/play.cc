@@ -233,6 +233,56 @@ int main(int argc, char *argv[])
       printw("[Jaffar]  + Feather Fall: %d\n", *showSDLPop.is_feather_fall);
       printw("[Jaffar]  + Need Lvl1 Music: %d\n", *showSDLPop.need_level1_music);
       printw("[Jaffar]  + RNG State: 0x%08X (Last Loose Tile Sound Id: %d)\n", *showSDLPop.random_seed, *showSDLPop.last_loose_sound);
+
+      // Trobs are stationary animated objects.
+      printw("[Jaffar]  + Active Objects\n");
+      for (int i = 0; i < *showSDLPop.trobs_count; ++i)
+      {
+        const auto &trob = (*showSDLPop.trobs)[i];
+        const auto idx = (trob.room - 1) * 30 + trob.tilepos;
+        const auto fgstate = showSDLPop.level->fg[idx];
+        const auto bgstate = showSDLPop.level->bg[idx];
+        const auto type = showSDLPop.level->fg[idx] & 0x1f;
+        printw("[Jaffar]    + Index: %d, FG State: %d, BG State: %d, Type: ", idx, fgstate, bgstate);
+
+        switch (type)
+        {
+        case tiles_0_empty: printw("Empty"); break;
+        case tiles_1_floor: printw("Floor"); break;
+        case tiles_3_pillar: printw("Pillar"); break;
+        case tiles_5_stuck: printw("Stuck"); break;
+        case tiles_6_closer: printw("Closer"); break;
+        case tiles_7_doortop_with_floor: printw("Doortop With Floor"); break;
+        case tiles_8_bigpillar_bottom: printw("Big Pillar Bottom"); break;
+        case tiles_9_bigpillar_top: printw("Big Pillar Top"); break;
+        case tiles_10_potion: printw("Potion"); break;
+        case tiles_12_doortop: printw("Doortop"); break;
+        case tiles_14_debris: printw("Debris"); break;
+        case tiles_15_opener: printw("Opener"); break;
+        case tiles_17_level_door_right: printw("Level Door Right"); break;
+        case tiles_19_torch: printw("Torch"); break;
+        case tiles_20_wall: printw("Wall"); break;
+        case tiles_21_skeleton: printw("Skeleton"); break;
+        case tiles_22_sword: printw("Sword"); break;
+        case tiles_23_balcony_left: printw("Balcony Left"); break;
+        case tiles_24_balcony_right: printw("Balcony Right"); break;
+        case tiles_25_lattice_pillar: printw("Lattice Pillar"); break;
+        case tiles_26_lattice_down: printw("Lattice Down"); break;
+        case tiles_27_lattice_small: printw("Lattice Small"); break;
+        case tiles_28_lattice_left: printw("Lattice Left"); break;
+        case tiles_29_lattice_right: printw("Lattice Right"); break;
+        case tiles_30_torch_with_debris: printw("Torch With Debris"); break;
+        case tiles_13_mirror: printw("Mirror"); break;
+        case tiles_4_gate: printw("Gate"); break;
+        case tiles_2_spike: printw("Spike"); break;
+        case tiles_11_loose: printw("Loose Tile"); break;
+        case tiles_16_level_door_left: printw("Level Door Left"); break;
+        case tiles_18_chomper: printw("Chomper"); break;
+        default:
+          EXIT_WITH_ERROR("Unknown trob type: %d\n", int(type));
+       }
+       printw("\n");
+      }
     }
 
     // Resetting show frame info flag
