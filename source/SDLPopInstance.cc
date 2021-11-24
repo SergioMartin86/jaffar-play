@@ -459,7 +459,11 @@ void SDLPopInstance::advanceFrame()
   play_frame();
 
   if (*is_restart_level == 1)
+  {
    startLevel(*current_level);
+   do_mobs();
+   process_trobs();
+  }
 
   // if we're on lvl 4, check mirror
   if (*current_level == 4) check_mirror();

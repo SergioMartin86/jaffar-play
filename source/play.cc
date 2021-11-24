@@ -98,7 +98,7 @@ int main(int argc, char *argv[])
   const auto moveList = split(moveSequence, ' ');
 
   // Getting sequence size
-  const int sequenceLength = moveList.size();
+  const int sequenceLength = moveList.size()-1;
 
   // Printing info
   printw("[Jaffar] Playing sequence file: %s\n", solutionFile.c_str());
@@ -125,7 +125,7 @@ int main(int argc, char *argv[])
   frameSequence.push_back(genState.saveState());
 
   // Iterating move list in the sequence
-  for (int i = 0; i < sequenceLength; i++)
+  for (int i = 0; i < sequenceLength-1; i++)
   {
 //     // Kid.Room Kid.x Kid.y Kid.frame Kid.Orientation
 //    sequenceJs["Kid Room"][i] = int(genSDLPop.Kid->room);
@@ -161,7 +161,7 @@ int main(int argc, char *argv[])
   showSDLPop.draw();
 
   // Variable for current step in view
-  int currentStep = 1;
+  int currentStep = 0;
 
   // Print command list
   if (isReproduce == false)
@@ -180,22 +180,22 @@ int main(int argc, char *argv[])
   do
   {
     // Loading requested step
-    showState.loadState(frameSequence[currentStep - 1]);
+    showState.loadState(frameSequence[currentStep]);
 
     // Calculating timing
-    size_t timeStep = currentStep-1;
-    size_t curMins = timeStep / 720;
-    size_t curSecs = (timeStep - (curMins * 60)) / 12;
-    size_t curMilliSecs = ceil((double)(timeStep - (curMins * 720) - (curSecs * 12)) / 0.012);
+    size_t curMins = currentStep / 720;
+    size_t curSecs = (currentStep % 720) / 12;
+    size_t curMilliSecs = floor((double)(currentStep % 12) / 0.012);
 
     showSDLPop._IGTMins = curMins;
     showSDLPop._IGTSecs = curSecs;
     showSDLPop._IGTMillisecs = curMilliSecs;
-    showSDLPop._move = moveList[timeStep];
+    showSDLPop._move = moveList[currentStep];
 
-    size_t maxMins = sequenceLength / 720;
-    size_t maxSecs = (sequenceLength - (maxMins * 60)) / 12;
-    size_t maxMilliSecs = ceil((double)(sequenceLength - (maxMins * 720) - (maxSecs * 12)) / 0.012);
+    size_t sequenceStep = sequenceLength-1;
+    size_t maxMins = sequenceStep / 720;
+    size_t maxSecs = (sequenceStep % 720) / 12;
+    size_t maxMilliSecs = floor((double)(sequenceStep % 12) / 0.012);
 
     // Draw requested step
     showSDLPop.draw();
@@ -203,16 +203,17 @@ int main(int argc, char *argv[])
     if (showFrameInfo)
     {
       printw("[Jaffar] ----------------------------------------------------------------\n");
-      printw("[Jaffar] Current Step #: %d / %d\n", currentStep, sequenceLength);
+      printw("[Jaffar] Current Step #: %d / %d\n", currentStep, sequenceLength-1);
       printw("[Jaffar]  + Current IGT:    %2lu:%02lu.%03lu / %2lu:%02lu.%03lu\n", curMins, curSecs, curMilliSecs, maxMins, maxSecs, maxMilliSecs);
-      printw("[Jaffar]  + Move: %s\n", moveList[currentStep - 1].c_str());
+      printw("[Jaffar]  + Move: %s\n", moveList[currentStep].c_str());
 
       int kidSeqIdx = showSDLPop.getKidSequenceId();
-      printw("[Jaffar]  + [Kid]   Room: %d, Pos.x: %3d, Pos.y: %3d, Fall.x: %d, Fall.y: %d, Frame: %3d, HP: %d/%d, Dir: %d, SeqId: %d (%s)\n",
+      printw("[Jaffar]  + [Kid]   Room: %d, Pos.x: %3d, Pos.y: %3d, Row: %2d, Col: %2d, Fall.y: %d, Frame: %3d, HP: %d/%d, Dir: %d, SeqId: %d (%s)\n",
              int(showSDLPop.Kid->room),
              int(showSDLPop.Kid->x),
              int(showSDLPop.Kid->y),
-             int(showSDLPop.Kid->fall_x),
+             int(showSDLPop.Kid->curr_row),
+             int(showSDLPop.Kid->curr_col),
              int(showSDLPop.Kid->fall_y),
              int(showSDLPop.Kid->frame),
              int(*showSDLPop.hitp_curr),
@@ -221,11 +222,12 @@ int main(int argc, char *argv[])
              kidSeqIdx, seqNames[kidSeqIdx]);
 
       int guardSeqIdx = showSDLPop.getGuardSequenceId();
-      printw("[Jaffar]  + [Guard] Room: %d, Pos.x: %3d, Pos.y: %3d, Fall.x: %d, Fall.y: %d, Frame: %3d, HP: %d/%d, Dir: %d, SeqId: %d (%s)\n",
+      printw("[Jaffar]  + [Guard] Room: %d, Pos.x: %3d, Pos.y: %3d, Row: %2d, Col: %2d, Fall.y: %d, Frame: %3d, HP: %d/%d, Dir: %d, SeqId: %d (%s)\n",
              int(showSDLPop.Guard->room),
              int(showSDLPop.Guard->x),
              int(showSDLPop.Guard->y),
-             int(showSDLPop.Guard->fall_x),
+             int(showSDLPop.Guard->curr_row),
+             int(showSDLPop.Guard->curr_col),
              int(showSDLPop.Guard->fall_y),
              int(showSDLPop.Guard->frame),
              int(*showSDLPop.guardhp_curr),
@@ -299,7 +301,6 @@ int main(int argc, char *argv[])
     // If we're reproducing do not have an interactive interface
     if (isReproduce)
     {
-     currentStep = currentStep + 1;
      if (currentStep > sequenceLength) break;
      continue;
     }
@@ -316,8 +317,8 @@ int main(int argc, char *argv[])
     if (command == 'u') currentStep = currentStep + 100;
 
     // Correct current step if requested more than possible
-    if (currentStep < 1) currentStep = 1;
-    if (currentStep > sequenceLength) currentStep = sequenceLength;
+    if (currentStep < 0) currentStep = 0;
+    if (currentStep >= sequenceLength) currentStep = sequenceLength-1;
 
     // Replay creation command
     if (command == 'r')
@@ -358,7 +359,7 @@ int main(int argc, char *argv[])
       *showSDLPop.random_seed = std::stol(str);
 
       // Replacing current sequence
-      frameSequence[currentStep-1] = showState.saveState();
+      frameSequence[currentStep] = showState.saveState();
     }
 
     // loose tile sound setting command
@@ -373,7 +374,7 @@ int main(int argc, char *argv[])
       *showSDLPop.last_loose_sound = std::stoi(str);
 
       // Replacing current sequence
-      frameSequence[currentStep-1] = showState.saveState();
+      frameSequence[currentStep] = showState.saveState();
     }
 
     // loose tile sound setting command
@@ -388,7 +389,7 @@ int main(int argc, char *argv[])
       *showSDLPop.need_level1_music = std::stoi(str);
 
       // Replacing current sequence
-      frameSequence[currentStep-1] = showState.saveState();
+      frameSequence[currentStep] = showState.saveState();
     }
 
   } while (command != 'q');
