@@ -243,6 +243,7 @@ int main(int argc, char *argv[])
       printw("[Jaffar]  + Feather Fall: %d\n", *showSDLPop.is_feather_fall);
       printw("[Jaffar]  + Need Lvl1 Music: %d\n", *showSDLPop.need_level1_music);
       printw("[Jaffar]  + RNG State: 0x%08X (Last Loose Tile Sound Id: %d)\n", *showSDLPop.random_seed, *showSDLPop.last_loose_sound);
+      printw("[Jaffar]  + Demo Index: %d, Time: %d\n", *showSDLPop.demo_index, *showSDLPop.demo_time);
 
       // Trobs are stationary animated objects.
       printw("[Jaffar]  + Active Objects\n");
@@ -301,6 +302,7 @@ int main(int argc, char *argv[])
     // If we're reproducing do not have an interactive interface
     if (isReproduce)
     {
+     currentStep++;
      if (currentStep > sequenceLength) break;
      continue;
     }
