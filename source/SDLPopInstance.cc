@@ -11,6 +11,10 @@ const word seqOffsets[] = { 0x1973, 0x1975, 0x1978, 0x1981, 0x1995, 0x19A0, 0x19
 
 void SDLPopInstance::initialize(const bool useGUI)
 {
+ _IGTMins = 0;
+ _IGTSecs = 0;
+ _IGTMillisecs = 0;
+ _move = ".";
 
   // Looking for sdlpop in default folders when running examples
   if (dirExists("extern/SDLPoP/"))
@@ -33,6 +37,10 @@ void SDLPopInstance::initialize(const bool useGUI)
     sprintf(*exe_dir, "../../../extern/SDLPoP/");
     *found_exe_dir = true;
   }
+
+  const char* sdlPopRootEnv = std::getenv("SDLPOP_ROOT");
+  if (sdlPopRootEnv == NULL) EXIT_WITH_ERROR("[Error] SDLPOP_ROOT environment variable not found.\n");
+  _sdlPopRoot = sdlPopRootEnv;
 
   // If not found, looking for the SDLPOP_ROOT env variable
   if (*found_exe_dir == false)
@@ -152,6 +160,53 @@ void SDLPopInstance::initialize(const bool useGUI)
   *current_level = 0;
   startLevel(1);
   *need_level1_music = (*custom)->intro_music_time_initial;
+
+
+  if (useGUI == true)
+  {
+   std::string imagePath;
+
+   imagePath = _sdlPopRoot + std::string("/../../images/") + std::string("down.png");
+   _downSurface = IMG_Load(imagePath.c_str());
+   if (_downSurface == NULL) EXIT_WITH_ERROR("[Error] Could not load image: %s, Reason: %s\n", imagePath.c_str(), SDL_GetError());
+
+   imagePath = _sdlPopRoot + std::string("/../../images/") + std::string("up.png");
+   _upSurface = IMG_Load(imagePath.c_str());
+   if (_upSurface == NULL) EXIT_WITH_ERROR("[Error] Could not load image: %s, Reason: %s\n", imagePath.c_str(), SDL_GetError());
+
+   imagePath = _sdlPopRoot + std::string("/../../images/") + std::string("left.png");
+   _leftSurface = IMG_Load(imagePath.c_str());
+   if (_leftSurface == NULL) EXIT_WITH_ERROR("[Error] Could not load image: %s, Reason: %s\n", imagePath.c_str(), SDL_GetError());
+
+   imagePath = _sdlPopRoot + std::string("/../../images/") + std::string("right.png");
+   _rightSurface = IMG_Load(imagePath.c_str());
+   if (_rightSurface == NULL) EXIT_WITH_ERROR("[Error] Could not load image: %s, Reason: %s\n", imagePath.c_str(), SDL_GetError());
+
+   imagePath = _sdlPopRoot + std::string("/../../images/") + std::string("shift.png");
+   _shiftSurface = IMG_Load(imagePath.c_str());
+   if (_shiftSurface == NULL) EXIT_WITH_ERROR("[Error] Could not load image: %s, Reason: %s\n", imagePath.c_str(), SDL_GetError());
+
+   imagePath = _sdlPopRoot + std::string("/../../images/") + std::string("down2.png");
+   _down2Surface = IMG_Load(imagePath.c_str());
+   if (_down2Surface == NULL) EXIT_WITH_ERROR("[Error] Could not load image: %s, Reason: %s\n", imagePath.c_str(), SDL_GetError());
+
+   imagePath = _sdlPopRoot + std::string("/../../images/") + std::string("up2.png");
+   _up2Surface = IMG_Load(imagePath.c_str());
+   if (_up2Surface == NULL) EXIT_WITH_ERROR("[Error] Could not load image: %s, Reason: %s\n", imagePath.c_str(), SDL_GetError());
+
+   imagePath = _sdlPopRoot + std::string("/../../images/") + std::string("left2.png");
+   _left2Surface = IMG_Load(imagePath.c_str());
+   if (_left2Surface == NULL) EXIT_WITH_ERROR("[Error] Could not load image: %s, Reason: %s\n", imagePath.c_str(), SDL_GetError());
+
+   imagePath = _sdlPopRoot + std::string("/../../images/") + std::string("right2.png");
+   _right2Surface = IMG_Load(imagePath.c_str());
+   if (_right2Surface == NULL) EXIT_WITH_ERROR("[Error] Could not load image: %s, Reason: %s\n", imagePath.c_str(), SDL_GetError());
+
+   imagePath = _sdlPopRoot + std::string("/../../images/") + std::string("shift2.png");
+   _shift2Surface = IMG_Load(imagePath.c_str());
+   if (_shift2Surface == NULL) EXIT_WITH_ERROR("[Error] Could not load image: %s, Reason: %s\n", imagePath.c_str(), SDL_GetError());
+  }
+
 }
 
 void SDLPopInstance::startLevel(const word level)
@@ -237,10 +292,33 @@ void SDLPopInstance::draw()
   draw_game_frame();
 
   char IGTText[512];
-  sprintf(IGTText, "IGT %2lu:%02lu.%03lu", getElapsedMins(), getElapsedSecs(), getElapsedMilisecs());
+  sprintf(IGTText, "IGT %2lu:%02lu.%03lu", _IGTMins, _IGTSecs, _IGTMillisecs);
   display_text_bottom(IGTText);
+
+  SDL_Surface* downSurface = _downSurface;
+  SDL_Surface* upSurface = _upSurface;
+  SDL_Surface* leftSurface = _leftSurface;
+  SDL_Surface* rightSurface = _rightSurface;
+  SDL_Surface* shiftSurface = _shiftSurface;
+
+  if (_move.find("D") != std::string::npos) downSurface = _down2Surface;
+  if (_move.find("U") != std::string::npos) upSurface = _up2Surface;
+  if (_move.find("L") != std::string::npos) leftSurface = _left2Surface;
+  if (_move.find("R") != std::string::npos) rightSurface = _right2Surface;
+  if (_move.find("S") != std::string::npos) shiftSurface = _shift2Surface;
+
+  draw_image_transp_vga(downSurface, 280, 170);
+  draw_image_transp_vga(upSurface, 280, 150);
+  draw_image_transp_vga(leftSurface, 260, 170);
+  draw_image_transp_vga(rightSurface, 300, 170);
+  draw_image_transp_vga(shiftSurface, 260, 150);
+
   update_screen();
   do_simple_wait(timer_1);
+
+  SDL_RenderClear(*renderer_);
+  SDL_RenderCopy(*renderer_, *target_texture, NULL, NULL);
+  SDL_RenderPresent(*renderer_);
 }
 
 std::string SDLPopInstance::serializeFileCache()
@@ -550,6 +628,7 @@ SDLPopInstance::SDLPopInstance(const char* libraryFile, const bool multipleLibra
   start_game = (start_game_t) dlsym(_dllHandle, "start_game");
   display_text_bottom = (display_text_bottom_t) dlsym(_dllHandle, "display_text_bottom");
   redraw_screen = (redraw_screen_t) dlsym(_dllHandle, "redraw_screen");
+  draw_image_transp_vga = (draw_image_transp_vga_t) dlsym(_dllHandle, "draw_image_transp_vga");
 
   // State variables
   Kid = (char_type *)dlsym(_dllHandle, "Kid");
@@ -672,6 +751,8 @@ SDLPopInstance::SDLPopInstance(const char* libraryFile, const bool multipleLibra
   _cachedFileCounter = (cachedFileCounter_t*)dlsym(_dllHandle, "_cachedFileCounter");
   fixes = (fixes_options_type**)dlsym(_dllHandle, "fixes");
   copyprot_plac = (word *) dlsym(_dllHandle, "copyprot_plac");
+  renderer_ = (SDL_Renderer**) dlsym(_dllHandle, "renderer_");
+  target_texture = (SDL_Texture**) dlsym(_dllHandle, "target_texture");
 }
 
 SDLPopInstance::~SDLPopInstance()

@@ -79,6 +79,7 @@ typedef void (*__pascal far alter_mods_allrm_t)(void);
 typedef void (*__pascal far start_replay_t)(void);
 typedef void (*__pascal far display_text_bottom_t)(const char near *text);
 typedef void (*__pascal far redraw_screen_t)(int drawing_different_room);
+typedef void (*__pascal far draw_image_transp_vga_t)(image_type far *image,int xpos,int ypos);
 
 typedef chtab_type *chtab_addrs_t[10];
 typedef mob_type mobs_t[14];
@@ -144,6 +145,24 @@ class SDLPopInstance
   size_t getElapsedMins();
   size_t getElapsedSecs();
   size_t getElapsedMilisecs();
+
+  size_t _IGTMins;
+  size_t _IGTSecs;
+  size_t _IGTMillisecs;
+  std::string _move;
+  std::string _sdlPopRoot;
+
+  SDL_Surface* _downSurface;
+  SDL_Surface* _upSurface;
+  SDL_Surface* _leftSurface;
+  SDL_Surface* _rightSurface;
+  SDL_Surface* _shiftSurface;
+  SDL_Surface* _down2Surface;
+  SDL_Surface* _up2Surface;
+  SDL_Surface* _left2Surface;
+  SDL_Surface* _right2Surface;
+  SDL_Surface* _shift2Surface;
+
 
   int getKidSequenceId();
   int getGuardSequenceId();
@@ -219,6 +238,7 @@ class SDLPopInstance
   start_game_t start_game;
   display_text_bottom_t display_text_bottom;
   redraw_screen_t redraw_screen;
+  draw_image_transp_vga_t draw_image_transp_vga;
 
   // SDLPop State variables
   char_type *Kid;     //
@@ -335,6 +355,8 @@ class SDLPopInstance
   byte* enable_copyprot;
   fixes_options_type** fixes;
   word* copyprot_plac;
+  SDL_Renderer** renderer_;
+  SDL_Texture** target_texture;
 
   // File cache variables
   cachedFilePointerTable_t* _cachedFilePointerTable;
