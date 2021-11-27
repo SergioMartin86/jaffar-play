@@ -127,13 +127,6 @@ int main(int argc, char *argv[])
   // Iterating move list in the sequence
   for (int i = 0; i < sequenceLength-1; i++)
   {
-//     // Kid.Room Kid.x Kid.y Kid.frame Kid.Orientation
-//    sequenceJs["Kid Room"][i] = int(genSDLPop.Kid->room);
-//    sequenceJs["Kid X"][i] = int(genSDLPop.Kid->x);
-//    sequenceJs["Kid Y"][i] = int(genSDLPop.Kid->y);
-//    sequenceJs["Kid Frame"][i] = int(genSDLPop.Kid->frame);
-//    sequenceJs["Kid Direction"][i] = int(genSDLPop.Kid->direction);
-
     genSDLPop.performMove(moveList[i]);
     genSDLPop.advanceFrame();
 
@@ -245,8 +238,16 @@ int main(int argc, char *argv[])
       printw("[Jaffar]  + RNG State: 0x%08X (Last Loose Tile Sound Id: %d)\n", *showSDLPop.random_seed, *showSDLPop.last_loose_sound);
       printw("[Jaffar]  + Demo Index: %d, Time: %d\n", *showSDLPop.demo_index, *showSDLPop.demo_time);
 
+      // Mobs are moving objects (only falling tiles)
+      printw("[Jaffar]  + Moving Objects:\n");
+      for (int i = 0; i < *showSDLPop.mobs_count; ++i)
+      {
+        const auto &mob = (*showSDLPop.mobs)[i];
+        printw("[Jaffar]    + Room: %d, X: %d, Y: %d, Speed: %d, Type: %d, Row: %d\n", mob.room, mob.xh, mob.y, mob.speed, mob.type, mob.row);
+      }
+
       // Trobs are stationary animated objects.
-      printw("[Jaffar]  + Active Objects\n");
+      printw("[Jaffar]  + Active Objects:\n");
       for (int i = 0; i < *showSDLPop.trobs_count; ++i)
       {
         const auto &trob = (*showSDLPop.trobs)[i];
@@ -294,7 +295,23 @@ int main(int argc, char *argv[])
        }
        printw("\n");
       }
-    }
+
+      // Tracking special tiles in level
+//      printw("[Jaffar]  + Static Tile Information:\n");
+//      for (int i = 0; i < 720; i++)
+//      {
+//        const auto type = showSDLPop.level->fg[i] & 0x1f;
+//        const auto fgstate = showSDLPop.level->fg[i];
+//        const auto bgstate = showSDLPop.level->bg[i];
+//
+//        switch (type)
+//        {
+//         case tiles_14_debris:
+//          printw("[Jaffar]    + Index: %i, FG State: %d, BG State: %d, Type: Debris\n", i, fgstate, bgstate);
+//         break;
+//       }
+//      }
+   }
 
     // Resetting show frame info flag
     showFrameInfo = true;
@@ -303,7 +320,7 @@ int main(int argc, char *argv[])
     if (isReproduce)
     {
      currentStep++;
-     if (currentStep > sequenceLength) break;
+     if (currentStep >= sequenceLength) break;
      continue;
     }
 
@@ -341,7 +358,7 @@ int main(int argc, char *argv[])
       std::string saveFileName = "jaffar.sav";
 
       // Saving frame info to file
-      bool status = saveStringToFile(frameSequence[currentStep - 1], saveFileName.c_str());
+      bool status = saveStringToFile(frameSequence[currentStep], saveFileName.c_str());
       if (status == true) printw("[Jaffar] State saved in '%s'.\n", saveFileName.c_str());
       if (status == false) printw("[Jaffar] Error saving file '%s'.\n", saveFileName.c_str());
 

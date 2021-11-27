@@ -76,5 +76,15 @@ executable('jaffar-show-snapshot',
   cpp_args: [ '-Wfatal-errors' ]
   )
 
+executable('jaffar-rngcalc',
+  'source/rngcalc.cc',
+  jaffarFiles,
+  dependencies: deps,
+  include_directories: inc,
+  link_with: [ ],
+  link_args: [ '-ldl' ],
+  cpp_args: [ '-Wfatal-errors' ]
+  )
+  
 checkStyleCommand = find_program('./tools/check_style.sh', required: true)
 test('C++ Style check', checkStyleCommand)
