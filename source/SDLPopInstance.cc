@@ -249,7 +249,7 @@ void SDLPopInstance::startLevel(const word level)
 
   stop_sounds();
 
-//  draw_level_first();
+  draw_level_first();
 
   show_copyprot(0);
   *enable_copyprot = 1;
