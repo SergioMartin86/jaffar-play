@@ -249,7 +249,7 @@ void SDLPopInstance::startLevel(const word level)
 
   stop_sounds();
 
-  draw_level_first();
+//  draw_level_first();
 
   show_copyprot(0);
   *enable_copyprot = 1;
@@ -461,12 +461,15 @@ void SDLPopInstance::advanceFrame()
   if (*is_restart_level == 1)
   {
    startLevel(*current_level);
-   do_mobs();
-   process_trobs();
+   draw_level_first();
   }
 
   // if we're on lvl 4, check mirror
-  if (*current_level == 4) check_mirror();
+  if (*current_level == 4)
+  {
+   if (*jumped_through_mirror == -1) Guard->x = 245;
+   check_mirror();
+  }
 
   // If level has changed, then load it
   if (*current_level != *next_level)
@@ -757,6 +760,7 @@ SDLPopInstance::SDLPopInstance(const char* libraryFile, const bool multipleLibra
   copyprot_plac = (word *) dlsym(_dllHandle, "copyprot_plac");
   renderer_ = (SDL_Renderer**) dlsym(_dllHandle, "renderer_");
   target_texture = (SDL_Texture**) dlsym(_dllHandle, "target_texture");
+  jumped_through_mirror = (short*) dlsym(_dllHandle, "jumped_through_mirror");
 }
 
 SDLPopInstance::~SDLPopInstance()

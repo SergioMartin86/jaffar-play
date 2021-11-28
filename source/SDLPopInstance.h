@@ -357,6 +357,7 @@ class SDLPopInstance
   word* copyprot_plac;
   SDL_Renderer** renderer_;
   SDL_Texture** target_texture;
+  short *jumped_through_mirror;
 
   // File cache variables
   cachedFilePointerTable_t* _cachedFilePointerTable;
