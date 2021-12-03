@@ -5,11 +5,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/stat.h>
+#include <algorithm>
 
 std::vector<std::string> split(const std::string &s, char delim)
 {
+  std::string newString = s;
+  std::replace(newString.begin(), newString.end(), '\n', ' ');
   std::vector<std::string> elems;
-  split(s, delim, std::back_inserter(elems));
+  split(newString, delim, std::back_inserter(elems));
   return elems;
 }
 

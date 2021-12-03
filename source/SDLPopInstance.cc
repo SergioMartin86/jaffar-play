@@ -761,6 +761,7 @@ SDLPopInstance::SDLPopInstance(const char* libraryFile, const bool multipleLibra
   renderer_ = (SDL_Renderer**) dlsym(_dllHandle, "renderer_");
   target_texture = (SDL_Texture**) dlsym(_dllHandle, "target_texture");
   jumped_through_mirror = (short*) dlsym(_dllHandle, "jumped_through_mirror");
+  can_guard_see_kid = (short*) dlsym(_dllHandle, "can_guard_see_kid");
 }
 
 SDLPopInstance::~SDLPopInstance()

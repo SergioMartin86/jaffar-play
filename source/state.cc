@@ -99,6 +99,8 @@ std::vector<State::Item> GenerateItemsMap(SDLPopInstance *sdlPop)
   AddItem(&dest, *sdlPop->exit_room_timer, State::PER_FRAME_STATE);
   // replay recording state
   AddItem(&dest, replay_curr_tick, State::PER_FRAME_STATE);
+  AddItem(&dest, *sdlPop->is_guard_notice, State::PER_FRAME_STATE);
+  AddItem(&dest, *sdlPop->can_guard_see_kid, State::PER_FRAME_STATE);
   return dest;
 }
 

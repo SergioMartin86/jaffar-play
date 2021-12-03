@@ -200,8 +200,7 @@ int main(int argc, char *argv[])
       printw("[Jaffar]  + Current IGT:    %2lu:%02lu.%03lu / %2lu:%02lu.%03lu\n", curMins, curSecs, curMilliSecs, maxMins, maxSecs, maxMilliSecs);
       printw("[Jaffar]  + Move: %s\n", moveList[currentStep].c_str());
 
-      int kidSeqIdx = showSDLPop.getKidSequenceId();
-      printw("[Jaffar]  + [Kid]   Room: %d, Pos.x: %3d, Pos.y: %3d, Row: %2d, Col: %2d, Fall.y: %d, Frame: %3d, HP: %d/%d, Dir: %d, SeqId: %d (%s)\n",
+      printw("[Jaffar]  + [Kid]   Room: %d, Pos.x: %3d, Pos.y: %3d, Row: %2d, Col: %2d, Fall.y: %d, Frame: %3d, HP: %d/%d, Dir: %d, SeqId: %d\n",
              int(showSDLPop.Kid->room),
              int(showSDLPop.Kid->x),
              int(showSDLPop.Kid->y),
@@ -212,10 +211,9 @@ int main(int argc, char *argv[])
              int(*showSDLPop.hitp_curr),
              int(*showSDLPop.hitp_max),
              int(showSDLPop.Kid->direction),
-             kidSeqIdx, seqNames[kidSeqIdx]);
+             showSDLPop.Kid->curr_seq);
 
-      int guardSeqIdx = showSDLPop.getGuardSequenceId();
-      printw("[Jaffar]  + [Guard] Room: %d, Pos.x: %3d, Pos.y: %3d, Row: %2d, Col: %2d, Fall.y: %d, Frame: %3d, HP: %d/%d, Dir: %d, SeqId: %d (%s)\n",
+      printw("[Jaffar]  + [Guard] Room: %d, Pos.x: %3d, Pos.y: %3d, Row: %2d, Col: %2d, Fall.y: %d, Frame: %3d, HP: %d/%d, Dir: %d, SeqId: %d\n",
              int(showSDLPop.Guard->room),
              int(showSDLPop.Guard->x),
              int(showSDLPop.Guard->y),
@@ -226,17 +224,18 @@ int main(int argc, char *argv[])
              int(*showSDLPop.guardhp_curr),
              int(*showSDLPop.guardhp_max),
              int(showSDLPop.Guard->direction),
-             guardSeqIdx, seqNames[guardSeqIdx]);
+             showSDLPop.Guard->curr_seq);
 
       // Level-Specific Settings
       if (*showSDLPop.current_level == 9) printw("[Jaffar]  + Rightmost Door: %d\n", showSDLPop.level->bg[349]);
 
-      printw("[Jaffar]  + Exit Door Open: %s\n", showSDLPop.isLevelExitDoorOpen() ? "Yes" : "No");
+      printw("[Jaffar]  + Exit Door Open: %s (%d)\n", showSDLPop.isLevelExitDoorOpen() ? "Yes" : "No", *showSDLPop.leveldoor_open);
       printw("[Jaffar]  + Reached Checkpoint: %s (%d)\n", *showSDLPop.checkpoint ? "Yes" : "No", *showSDLPop.checkpoint);
       printw("[Jaffar]  + Feather Fall: %d\n", *showSDLPop.is_feather_fall);
       printw("[Jaffar]  + Need Lvl1 Music: %d\n", *showSDLPop.need_level1_music);
       printw("[Jaffar]  + RNG State: 0x%08X (Last Loose Tile Sound Id: %d)\n", *showSDLPop.random_seed, *showSDLPop.last_loose_sound);
       printw("[Jaffar]  + Demo Index: %d, Time: %d\n", *showSDLPop.demo_index, *showSDLPop.demo_time);
+      printw("[Jaffar]  + Exit Room Timer: %d\n", *showSDLPop.exit_room_timer);
 
       // Mobs are moving objects (only falling tiles)
       printw("[Jaffar]  + Moving Objects:\n");
@@ -297,20 +296,20 @@ int main(int argc, char *argv[])
       }
 
       // Tracking special tiles in level
-//      printw("[Jaffar]  + Static Tile Information:\n");
-//      for (int i = 0; i < 720; i++)
-//      {
-//        const auto type = showSDLPop.level->fg[i] & 0x1f;
-//        const auto fgstate = showSDLPop.level->fg[i];
-//        const auto bgstate = showSDLPop.level->bg[i];
-//
-//        switch (type)
-//        {
-//         case tiles_14_debris:
-//          printw("[Jaffar]    + Index: %i, FG State: %d, BG State: %d, Type: Debris\n", i, fgstate, bgstate);
-//         break;
-//       }
-//      }
+      printw("[Jaffar]  + Static Tile Information:\n");
+      for (int i = 0; i < 720; i++)
+      {
+        const auto type = showSDLPop.level->fg[i] & 0x1f;
+        const auto fgstate = showSDLPop.level->fg[i];
+        const auto bgstate = showSDLPop.level->bg[i];
+
+        switch (type)
+        {
+         case tiles_14_debris:
+          printw("[Jaffar]    + Index: %i, FG State: %d, BG State: %d, Type: Debris\n", i, fgstate, bgstate);
+         break;
+       }
+      }
    }
 
     // Resetting show frame info flag
