@@ -144,9 +144,6 @@ int main(int argc, char *argv[])
   // Initializing State Handler
   State showState(&showSDLPop, saveString);
 
-  // Setting timer for a human-visible animation
-  showSDLPop.set_timer_length(timer_1, 5);
-
   // Setting window title
   SDL_SetWindowTitle(*showSDLPop.window_, "Jaffar Play");
 

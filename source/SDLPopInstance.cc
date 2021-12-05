@@ -314,6 +314,9 @@ void SDLPopInstance::draw()
   draw_image_transp_vga(shiftSurface, 260, 150);
 
   update_screen();
+
+  if (Kid->sword == sword_2_drawn) set_timer_length(timer_1, 6);
+  else set_timer_length(timer_1, 5);
   do_simple_wait(timer_1);
 
   SDL_RenderClear(*renderer_);
