@@ -66,8 +66,8 @@ executable('jaffar-play',
   cpp_args: [ '-Wfatal-errors' ]
   )
   
-executable('jaffar-show-snapshot',
-  'source/show-snapshot.cc',
+executable('jaffar-show',
+  'source/show.cc',
   jaffarFiles,
   dependencies: deps,
   include_directories: inc,
