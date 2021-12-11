@@ -75,6 +75,12 @@ Indicate where the SDLpop root folder is located:
 export SDLPOP_ROOT=$HOME/jaffar-play/extern/SDLPoP
 ```
 
+[Optional] Indicate which level file to use. Default: "LEVELS.DAT", i.e., the original game.
+
+```
+export SDLPOP_LEVELS_FILE=$HOME/jaffar/examples/istaria/LEVELS.DAT
+```
+
 Indicates how often will jaffar-show check for updates in the savestate
 
 ```
