@@ -97,8 +97,7 @@ typedef char* cachedFileBufferTable_t[MAX_CACHED_FILES];
 typedef size_t cachedFileBufferSizes_t[MAX_CACHED_FILES];
 typedef char cachedFilePathTable_t[MAX_CACHED_FILES][POP_MAX_PATH];
 typedef size_t cachedFileCounter_t;
-
-
+typedef char levels_file_t[POP_MAX_PATH];
 
 class SDLPopInstance
 {
@@ -358,6 +357,7 @@ class SDLPopInstance
   SDL_Renderer** renderer_;
   SDL_Texture** target_texture;
   short *jumped_through_mirror;
+  levels_file_t* levels_file;
 
   // File cache variables
   cachedFilePointerTable_t* _cachedFilePointerTable;

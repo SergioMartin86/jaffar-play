@@ -61,6 +61,11 @@ void SDLPopInstance::initialize(const bool useGUI)
     exit(-1);
   }
 
+  // Setting levels.dat path
+  sprintf(*levels_file, "LEVELS.DAT");
+  const char *lvlsPath = std::getenv("SDLPOP_LEVELS_FILE");
+  if (lvlsPath != NULL) sprintf(*levels_file, lvlsPath);
+
   // Setting argument config
   *is_validate_mode = byte(!useGUI);
   *g_argc = 1;
@@ -765,6 +770,7 @@ SDLPopInstance::SDLPopInstance(const char* libraryFile, const bool multipleLibra
   target_texture = (SDL_Texture**) dlsym(_dllHandle, "target_texture");
   jumped_through_mirror = (short*) dlsym(_dllHandle, "jumped_through_mirror");
   can_guard_see_kid = (short*) dlsym(_dllHandle, "can_guard_see_kid");
+  levels_file = (levels_file_t*) dlsym(_dllHandle, "levels_file");
 }
 
 SDLPopInstance::~SDLPopInstance()
