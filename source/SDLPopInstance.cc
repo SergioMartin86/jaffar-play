@@ -254,7 +254,8 @@ void SDLPopInstance::startLevel(const word level)
 
   stop_sounds();
 
-//  draw_level_first();
+  restore_room_after_quick_load();
+  draw_level_first();
 
   show_copyprot(0);
   *enable_copyprot = 1;
@@ -467,10 +468,7 @@ void SDLPopInstance::advanceFrame()
   play_frame();
 
   if (*is_restart_level == 1)
-  {
    startLevel(*current_level);
-   draw_level_first();
-  }
 
   // if we're on lvl 4, check mirror
   if (*current_level == 4)

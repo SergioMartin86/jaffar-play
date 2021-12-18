@@ -159,7 +159,7 @@ int main(int argc, char *argv[])
    printw("[Jaffar] Available commands:\n");
    printw("[Jaffar]  n: -1 m: +1 | h: -10 | j: +10 | y: -100 | u: +100 \n");
    printw("[Jaffar]  g: set RNG | l: loose tile sound | s: quicksave | r: create replay | q: quit  \n");
-   printw("[Jaffar]  1: set lvl1 music \n");
+   printw("[Jaffar]  1: set lvl1 music | w: set current hp | e: set max hp \n");
   }
 
   // Flag to display frame information
@@ -377,6 +377,36 @@ int main(int argc, char *argv[])
       char str[80];
       getstr(str);
       *showSDLPop.random_seed = std::stol(str);
+
+      // Replacing current sequence
+      frameSequence[currentStep] = showState.saveState();
+    }
+
+    // Set current HP
+    if (command == 'w')
+    {
+      // Obtaining RNG state
+      printw("Enter new current HP: ");
+
+      // Setting input as new rng
+      char str[80];
+      getstr(str);
+      *showSDLPop.hitp_curr = std::stol(str);
+
+      // Replacing current sequence
+      frameSequence[currentStep] = showState.saveState();
+    }
+
+    // Set max HP
+    if (command == 'e')
+    {
+      // Obtaining RNG state
+      printw("Enter new max HP: ");
+
+      // Setting input as new rng
+      char str[80];
+      getstr(str);
+      *showSDLPop.hitp_max = std::stol(str);
 
       // Replacing current sequence
       frameSequence[currentStep] = showState.saveState();
