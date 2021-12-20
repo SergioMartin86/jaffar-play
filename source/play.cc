@@ -226,6 +226,8 @@ int main(int argc, char *argv[])
       // Level-Specific Settings
       if (*showSDLPop.current_level == 9) printw("[Jaffar]  + Rightmost Door: %d\n", showSDLPop.level->bg[349]);
 
+      printw("[Jaffar]  + Guard Can See Kid: %d\n", *showSDLPop.can_guard_see_kid);
+      printw("[Jaffar]  + Is Guard Notice: %d\n", *showSDLPop.is_guard_notice);
       printw("[Jaffar]  + Exit Door Open: %s (%d)\n", showSDLPop.isLevelExitDoorOpen() ? "Yes" : "No", *showSDLPop.leveldoor_open);
       printw("[Jaffar]  + Reached Checkpoint: %s (%d)\n", *showSDLPop.checkpoint ? "Yes" : "No", *showSDLPop.checkpoint);
       printw("[Jaffar]  + Feather Fall: %d\n", *showSDLPop.is_feather_fall);
