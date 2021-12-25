@@ -309,6 +309,9 @@ int main(int argc, char *argv[])
          case tiles_14_debris:
           printw("[Jaffar]    + Index: %i, FG State: %d, BG State: %d, Type: Debris\n", i, fgstate, bgstate);
           break;
+         case tiles_4_gate:
+          printw("[Jaffar]    + Index: %i, FG State: %d, BG State: %d, Type: Gate\n", i, fgstate, bgstate);
+          break;
          case tiles_16_level_door_left:
           printw("[Jaffar]    + Index: %i, FG State: %d, BG State: %d, Type: Level Door Left\n", i, fgstate, bgstate);
           break;
